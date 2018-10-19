@@ -1,10 +1,11 @@
-import React, { ReactNode } from 'react';
+import React, { CSSProperties, ReactNode } from 'react';
 
 import {
   Publication,
   Rendition,
 } from '@evidentpoint/r2-navigator-web';
 
+import { NavButton } from './components/nav-button';
 import { ReadiumView } from './readium-view';
 
 export interface INYUReaderProps {
@@ -41,11 +42,21 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
   }
 
   public render(): ReactNode {
+    // tslint:disable-next-line:no-object-literal-type-assertion
+    const containerStyle = {
+      display: 'flex',
+      flexDirection: 'row',
+      width: '100%',
+      height: '100%',
+    } as CSSProperties;
+
     return (
-      <div>
+      <div style={ containerStyle }>
+        <NavButton isBackButton={ true } width={ 30 }/>
         <ReadiumView ref={r => this.readiumView = r}
-        enableScroll={ false } viewAsVertical={ false }
-        onRenditionCreated={ this.renditionUpdated }/>
+          enableScroll={ false } viewAsVertical={ false }
+          onRenditionCreated={ this.renditionUpdated }/>
+        <NavButton isBackButton={ false } width={ 30 }/>
       </div>
     );
   }

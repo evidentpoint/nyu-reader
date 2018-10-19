@@ -4,10 +4,12 @@ import { action } from '@storybook/addon-actions';
 import { storiesOf } from '@storybook/react';
 import React from 'react';
 
-storiesOf('Button', module)
-  .add('with text', () => (
-    <div onClick={action('clicked')}>Hello Button</div>
+import { NavButton } from '../src/components/nav-button';
+
+storiesOf('NavButton', module)
+  .add('Back', () => (
+    <NavButton isBackButton={ true } width={ 20 }></NavButton>
   ))
-  .add('with some emoji', () => (
-    <div onClick={action('clicked')}><span role="img" aria-label="so cool">😀 😎 👍 💯</span></div>
+  .add('Forward', () => (
+    <NavButton isBackButton={ false } width = { 20 }></NavButton>
   ));
