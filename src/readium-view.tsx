@@ -5,19 +5,21 @@ import {
   Publication,
   R2ContentViewFactory as ContentViewFactory,
   Rendition,
-  SpreadMode } from '@evidentpoint/r2-navigator-web';
+  RenditionContext,
+  SpreadMode,
+} from '@evidentpoint/r2-navigator-web';
 
 export interface IReadiumViewProps {
   enableScroll: boolean;
   viewAsVertical: boolean;
-  onRenditionCreated(rend: Rendition): void;
+  onRenditionCreated(rendCtx: RenditionContext): void;
 }
 
 export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
 
   private root: HTMLElement | null = null;
 
-  private rendition?: Rendition;
+  private rendContext? : RenditionContext;
 
   private publication?: Publication;
 
@@ -61,26 +63,28 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
 
     const cvf = new ContentViewFactory(loader);
     // const cvf = new ContentViewFactory(this.publication);
-    this.rendition = new Rendition(this.publication, this.root, cvf);
-    this.rendition.setViewAsVertical(this.props.viewAsVertical);
+    const rend = new Rendition(this.publication, this.root, cvf);
+    rend.setViewAsVertical(this.props.viewAsVertical);
 
     const viewportSize = this.props.viewAsVertical ? this.viewportHeight :
                                                       this.viewportWidth;
     const viewportSize2nd = this.props.viewAsVertical ? this.viewportWidth :
                                                         this.viewportHeight;
 
-    this.rendition.viewport.setViewportSize(viewportSize, viewportSize2nd);
-    this.rendition.viewport.setPrefetchSize(Math.ceil(viewportSize * 0.1));
-    this.rendition.setPageLayout({
+    rend.viewport.setViewportSize(viewportSize, viewportSize2nd);
+    rend.viewport.setPrefetchSize(Math.ceil(viewportSize * 0.1));
+    rend.setPageLayout({
       spreadMode: SpreadMode.FitViewportDoubleSpread,
       pageWidth: 0,
       pageHeight: this.viewportHeight,
     });
 
-    this.rendition.render();
-    this.rendition.viewport.enableScroll(this.props.enableScroll);
+    rend.render();
+    rend.viewport.enableScroll(this.props.enableScroll);
 
-    this.props.onRenditionCreated(this.rendition);
+    this.rendContext = new RenditionContext(rend, loader);
+
+    this.props.onRenditionCreated(this.rendContext);
   }
 
   private updateRoot(root: HTMLElement | null): void {

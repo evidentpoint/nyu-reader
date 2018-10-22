@@ -1,8 +1,9 @@
 import React, { CSSProperties, ReactNode } from 'react';
 
 import {
+  Navigator,
   Publication,
-  Rendition,
+  RenditionContext,
 } from '@evidentpoint/r2-navigator-web';
 
 import { NavButton } from './components/nav-button';
@@ -15,17 +16,19 @@ export interface INYUReaderProps {
 export interface INYUReaderStates {
   viewAsVertical: boolean;
   scrollEnabled: boolean;
+  navigator?: Navigator;
 }
 
 export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates> {
   private publication?: Publication;
 
-  private rendition?: Rendition;
+  private rendCtx?: RenditionContext;
 
   private readiumView: ReadiumView | null;
 
   constructor(props: {}) {
     super(props);
+    this.state = { viewAsVertical: false, scrollEnabled: false };
     this.renditionUpdated = this.renditionUpdated.bind(this);
   }
 
@@ -36,8 +39,8 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
       this.readiumView.openPublication(this.publication);
     }
 
-    if (this.rendition) {
-      this.rendition.viewport.renderAtOffset(0);
+    if (this.rendCtx) {
+      this.rendCtx.rendition.viewport.renderAtOffset(0);
     }
   }
 
@@ -52,17 +55,20 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
 
     return (
       <div style={ containerStyle }>
-        <NavButton isBackButton={ true } width={ 30 }/>
+        <NavButton isBackButton={ true } width={ 30 }
+          navigator={ this.state.navigator }/>
         <ReadiumView ref={r => this.readiumView = r}
-          enableScroll={ false } viewAsVertical={ false }
+          enableScroll={ this.state.scrollEnabled } viewAsVertical={ this.state.viewAsVertical }
           onRenditionCreated={ this.renditionUpdated }/>
-        <NavButton isBackButton={ false } width={ 30 }/>
+        <NavButton isBackButton={ false } width={ 30 }
+          navigator={ this.state.navigator }/>
       </div>
     );
   }
 
-  private renditionUpdated(rend: Rendition): void {
-    this.rendition = rend;
+  private renditionUpdated(rendCtx: RenditionContext): void {
+    this.rendCtx = rendCtx;
+    this.setState({ navigator: this.rendCtx.navigator });
   }
 
 }
