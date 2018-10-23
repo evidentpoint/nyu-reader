@@ -33,7 +33,6 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
 
   public render(): ReactNode {
     const readerStyle = {
-      height: '100%',
       width: '100%',
     };
 
