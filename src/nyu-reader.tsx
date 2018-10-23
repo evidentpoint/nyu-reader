@@ -18,6 +18,7 @@ export interface INYUReaderStates {
   viewAsVertical: boolean;
   scrollEnabled: boolean;
   navigator?: Navigator;
+  bookTitle: string;
 }
 
 export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates> {
@@ -27,14 +28,17 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
 
   private readiumView: ReadiumView | null;
 
-  constructor(props: {}) {
+  constructor(props: INYUReaderProps) {
     super(props);
-    this.state = { viewAsVertical: false, scrollEnabled: false };
+    this.state = { viewAsVertical: false, scrollEnabled: false, bookTitle: '' };
     this.renditionUpdated = this.renditionUpdated.bind(this);
   }
 
   public async openPublication(webpubUrl: string): Promise<void> {
     this.publication = await Publication.fromURL(webpubUrl);
+
+    const bookTitle = this.publication.Metadata.Title as string;
+    this.setState({ bookTitle });
 
     if (this.readiumView) {
       this.readiumView.openPublication(this.publication);
@@ -64,7 +68,7 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
 
     return (
       <div style={ appContainerStyle }>
-        <AppBar/>
+        <AppBar title={ this.state.bookTitle }/>
         <div style={ containerStyle }>
           <NavButton isBackButton={ true } width={ 30 }
             navigator={ this.state.navigator }/>
