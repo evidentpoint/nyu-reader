@@ -1,13 +1,10 @@
 import React, { ReactNode } from 'react';
 
-import {
-  Navigator,
-} from '@evidentpoint/r2-navigator-web';
+import { ReadingStateContext, IReadingActions } from '../reading-state-ctx';
 
 export interface INavButtonProps {
   isBackButton: boolean;
   width: number;
-  navigator?: Navigator;
 }
 
 export class NavButton extends React.Component<INavButtonProps, {}> {
@@ -19,26 +16,25 @@ export class NavButton extends React.Component<INavButtonProps, {}> {
   public render(): ReactNode {
     const buttonText = this.props.isBackButton ? '<' : '>';
 
-    const style = {
-      width: this.props.width,
-    };
-
     return (
-      <button style={ style } onClick={ this.handleClick }>
-        {buttonText}
-      </button>
+      <ReadingStateContext.Consumer>
+        { ({actions}) => (
+          <button style={ {width: this.props.width} } onClick={ () => {
+            this.handleClick(actions);
+          } }>
+            {buttonText}
+          </button>
+        )
+        }
+      </ReadingStateContext.Consumer>
     );
   }
 
-  private async handleClick(): Promise<void> {
-    if (!this.props.navigator) {
-      return;
-    }
-
+  private async handleClick(actions: IReadingActions): Promise<void> {
     if (this.props.isBackButton) {
-      await this.props.navigator.previousScreen();
+      await actions.prevScreen();
     } else {
-      await this.props.navigator.nextScreen();
+      await actions.nextScreen();
     }
   }
 }

@@ -6,8 +6,11 @@ import {
   RenditionContext,
 } from '@evidentpoint/r2-navigator-web';
 
+import { ReadingStateContext, IReadingState } from './reading-state-ctx';
+
 import { AppBar } from './components/app-bar';
 import { NavButton } from './components/nav-button';
+import { BookFooter } from './components/book-footer';
 import { ReadiumView } from './readium-view';
 
 export interface INYUReaderProps {
@@ -17,8 +20,11 @@ export interface INYUReaderProps {
 export interface INYUReaderStates {
   viewAsVertical: boolean;
   scrollEnabled: boolean;
-  navigator?: Navigator;
+
   bookTitle: string;
+  currReadingLocation: string;
+
+  readingState: IReadingState;
 }
 
 export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates> {
@@ -30,7 +36,17 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
 
   constructor(props: INYUReaderProps) {
     super(props);
-    this.state = { viewAsVertical: false, scrollEnabled: false, bookTitle: '' };
+
+    const initReadingState = {
+      actions: {
+        nextScreen: this.nextScreen.bind(this),
+        prevScreen: this.prevScreen.bind(this),
+      },
+    };
+
+    this.state = { viewAsVertical: false, scrollEnabled: false,
+                   bookTitle: '', currReadingLocation: '',
+                   readingState: initReadingState };
     this.renditionUpdated = this.renditionUpdated.bind(this);
   }
 
@@ -45,46 +61,77 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
     }
 
     if (this.rendCtx) {
-      this.rendCtx.rendition.viewport.renderAtOffset(0);
+      await this.rendCtx.rendition.viewport.renderAtOffset(0);
     }
+
+    this.updateCurrentReadingLocaion();
   }
 
   public render(): ReactNode {
-    // tslint:disable-next-line:no-object-literal-type-assertion
-    const appContainerStyle = {
+    const appContainerStyle: CSSProperties = {
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
       height: '100%',
-    } as CSSProperties;
+    };
 
-    // tslint:disable-next-line:no-object-literal-type-assertion
-    const containerStyle = {
+    const containerStyle: CSSProperties = {
       flex: 'auto',
       display: 'flex',
       flexDirection: 'row',
       width: '100%',
-    } as CSSProperties;
+    };
 
     return (
-      <div style={ appContainerStyle }>
-        <AppBar title={ this.state.bookTitle }/>
-        <div style={ containerStyle }>
-          <NavButton isBackButton={ true } width={ 30 }
-            navigator={ this.state.navigator }/>
-          <ReadiumView ref={r => this.readiumView = r}
-            enableScroll={ this.state.scrollEnabled } viewAsVertical={ this.state.viewAsVertical }
-            onRenditionCreated={ this.renditionUpdated }/>
-          <NavButton isBackButton={ false } width={ 30 }
-            navigator={ this.state.navigator }/>
-        </div>
+      <ReadingStateContext.Provider value={this.state.readingState}>
+        <div style={ appContainerStyle }>
+          <AppBar title={ this.state.bookTitle }/>
+          <div style={ containerStyle }>
+            <NavButton isBackButton={ true } width={ 30 }/>
+            <ReadiumView ref={r => this.readiumView = r}
+              enableScroll={ this.state.scrollEnabled } viewAsVertical={ this.state.viewAsVertical }
+              onRenditionCreated={ this.renditionUpdated }/>
+            <NavButton isBackButton={ false } width={ 30 }/>
+          </div>
+          <BookFooter content={ this.state.currReadingLocation }></BookFooter>
       </div>
+      </ReadingStateContext.Provider>
     );
   }
 
   private renditionUpdated(rendCtx: RenditionContext): void {
     this.rendCtx = rendCtx;
-    this.setState({ navigator: this.rendCtx.navigator });
+  }
+
+  private async nextScreen(): Promise<void> {
+    if (!this.rendCtx) {
+      return;
+    }
+
+    await this.rendCtx.navigator.nextScreen();
+
+    this.updateCurrentReadingLocaion();
+  }
+
+  private async prevScreen(): Promise<void> {
+    if (!this.rendCtx) {
+      return;
+    }
+
+    await this.rendCtx.navigator.previousScreen();
+
+    this.updateCurrentReadingLocaion();
+  }
+
+  private updateCurrentReadingLocaion(): void {
+    if (!this.rendCtx) {
+      return;
+    }
+
+    const loc = this.rendCtx.navigator.getCurrentLocation();
+    if (loc) {
+      this.setState({ currReadingLocation: loc.getLocation() });
+    }
   }
 
 }
