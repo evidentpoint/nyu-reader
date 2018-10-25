@@ -128,10 +128,18 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
       return;
     }
 
-    const loc = this.rendCtx.navigator.getCurrentLocation();
-    if (loc) {
-      this.setState({ currReadingLocation: loc.getLocation() });
+    let locContent = '';
+    const startLoc = this.rendCtx.navigator.getScreenBegin();
+    if (startLoc) {
+      locContent = startLoc.getLocation();
     }
+
+    const endLoc = this.rendCtx.navigator.getScreenEnd();
+    if (endLoc) {
+      locContent += ` - ${endLoc.getLocation()}`;
+    }
+
+    this.setState({ currReadingLocation: locContent });
   }
 
 }
