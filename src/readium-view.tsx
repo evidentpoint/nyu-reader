@@ -32,12 +32,8 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
   }
 
   public render(): ReactNode {
-    const readerStyle = {
-      width: '100%',
-    };
-
     return (
-      <div style={ readerStyle }
+      <div style={ {flex: '1'} }
         ref={ this.updateRoot }></div>
     );
   }
@@ -47,7 +43,9 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
       return;
     }
 
-    this.viewportWidth = this.root.clientWidth;
+    const scrollerWidthAdj = this.props.enableScroll ? 15 : 0;
+
+    this.viewportWidth = this.root.clientWidth - scrollerWidthAdj;
     this.viewportHeight = this.root.clientHeight;
   }
 
