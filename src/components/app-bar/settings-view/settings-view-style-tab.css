@@ -1,0 +1,9 @@
+.preview-block {
+  margin: 0 2rem 0 2rem;
+  border: 1px solid #777;
+  border-radius: 2px;
+  padding: 5px;
+  height: 5rem;
+  overflow: hidden;
+  text-align: left;
+}

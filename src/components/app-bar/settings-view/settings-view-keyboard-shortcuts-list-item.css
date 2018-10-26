@@ -1,0 +1,44 @@
+.keyboard-shortcuts-list-item {
+  border-width: 1px 0 0 0;
+  border-style: dashed;
+  border-color: silver;
+  width: 100%;
+  font-weight: 700;
+  max-width: 100%;
+  display: inline-block;
+  margin: 0 0 0.9em 0;
+}
+
+.keyboard-shortcuts-list-item .keyboardInputContainer {
+  float: right;
+}
+
+.keyboard-shortcuts-list-item label {
+  text-align: left;
+  display: inline-block;
+}
+
+.keyboard-shortcuts-list-item span {
+  font-weight: 400;
+  font-size: 90%;
+  display: block;
+}
+
+.keyboard-shortcuts-list-item .reset-button {
+  float: left;
+  margin: 0.8em 0 0 0;
+  text-align: right;
+}
+
+.keyboard-shortcuts-list-item .reset-button span {
+  pointer-events: none;
+}
+
+.keyboard-shortcuts-list-item input {
+  float: left;
+  text-align: right;
+  width: 10em;
+  -webkit-appearance: none;
+  line-height: inherit;
+  margin: 0.5em 0 0 0;
+}
