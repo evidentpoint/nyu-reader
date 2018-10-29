@@ -64,3 +64,14 @@ input[type=range]::-ms-thumb {
   border: 1px solid #383838;
   width: 100%;
 }
+
+.radio-group {
+  display: inline-flex;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+.radio-group .radio-container label {
+  font-weight: 700;
+  margin: 0 0 0 0.3em;
+}

@@ -5,11 +5,15 @@ import '../../common.css';
 // tslint:disable-next-line:no-import-side-effect
 import './settings-view.css';
 import { SettingsViewStyleTab } from './settings-view-style-tab';
+import { SettingsViewLayoutTab } from './settings-view-layout-tab';
 
 type State = {
   fontSize: number;
   fontFace: string;
   fontTheme: string;
+  pageWidth: number;
+  displayFormat: string;
+  scrollMode: string;
 };
 
 export interface IKeyBinding {
@@ -23,6 +27,9 @@ export class SettingsView extends React.Component<{}, {}> {
     fontSize: 1,
     fontFace: 'inherit',
     fontTheme: 'author-theme',
+    pageWidth: 550,
+    displayFormat: 'auto',
+    scrollMode: 'document',
   };
 
   constructor(props: {}) {
@@ -31,6 +38,9 @@ export class SettingsView extends React.Component<{}, {}> {
     this.setFontSize = this.setFontSize.bind(this);
     this.setFontFace = this.setFontFace.bind(this);
     this.setFontTheme = this.setFontTheme.bind(this);
+    this.setPageWidth = this.setPageWidth.bind(this);
+    this.setDisplayFormat = this.setDisplayFormat.bind(this);
+    this.setScrollMode = this.setScrollMode.bind(this);
   }
 
   public render(): ReactNode {
@@ -40,6 +50,7 @@ export class SettingsView extends React.Component<{}, {}> {
       >
         <TabList>
           <Tab>Style</Tab>
+          <Tab>Layout</Tab>
         </TabList>
 
         <TabPanel>
@@ -50,6 +61,16 @@ export class SettingsView extends React.Component<{}, {}> {
             onFontSizeChanged= {this.setFontSize}
             onFontFaceChanged= {this.setFontFace}
             onFontThemeChanged= {this.setFontTheme}
+          />
+        </TabPanel>
+        <TabPanel>
+          <SettingsViewLayoutTab
+            pageWidth= {this.state.pageWidth}
+            displayFormat= {this.state.displayFormat}
+            scrollMode= {this.state.scrollMode}
+            onPageWidthChange= {this.setPageWidth}
+            onDisplayFormatChange= {this.setDisplayFormat}
+            onScrollModeChange= {this.setScrollMode}
           />
         </TabPanel>
       </Tabs>
@@ -70,5 +91,17 @@ export class SettingsView extends React.Component<{}, {}> {
 
   private setFontTheme(theme: string): void {
     this.setState({fontTheme: theme});
+  }
+
+  private setPageWidth(width: number): void {
+    this.setState({pageWidth: width});
+  }
+
+  private setDisplayFormat(format: string): void {
+    this.setState({displayFormat: format});
+  }
+
+  private setScrollMode(mode: string): void {
+    this.setState({scrollMode: mode});
   }
 }
