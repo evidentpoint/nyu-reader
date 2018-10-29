@@ -1,0 +1,66 @@
+h5 {
+  font-size: 14px;
+  margin: 10px 0 10px 0;
+}
+
+h1, h2, h3, h4, h5 {
+  font-weight: 500;
+  line-height: 1.1;
+  color: #333;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+  background: #fdfdfd;
+}
+
+select {
+  font-size: inherit;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background-color: #ddd;
+  width: 10px;
+  height: 10px;
+  border-radius: 4px
+}
+
+input[type=range]::-moz-range-thumb {
+  -webkit-appearance: none;
+  background-color: #ddd;
+  width: 10px;
+  height: 10px;
+  border-radius: 4px
+}
+
+input[type=range]::-ms-thumb {
+  -webkit-appearance: none;
+  background-color: #ddd;
+  width: 10px;
+  height: 10px;
+  border-radius: 4px
+}
+
+.col-xs-offset-2 {
+  margin-left: 16.66666667%;
+}
+
+.col-xs-2 {
+  width: 16.66666667%;
+}
+
+.col-xs-8 {
+  width: 66.66666667%;
+}
+
+.range-slider{
+  -webkit-appearance: none;
+  background-color: #484848;
+  border-radius: 8px;
+  border: 1px solid #383838;
+  width: 100%;
+}

@@ -14,11 +14,14 @@
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "dependencies": {
+    "@types/react-tabs": "^2.3.0",
     "es6-shim": "^0.35.3",
+    "normalize.css": "^8.0.0",
     "promise-polyfill": "^8.0.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "@evidentpoint/r2-navigator-web": "^0.0.3",
+    "react-tabs": "^2.3.0",
     "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
