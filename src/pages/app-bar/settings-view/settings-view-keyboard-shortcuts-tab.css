@@ -1,0 +1,16 @@
+.reset-button {
+  color: #00f;
+  border: 0;
+}
+
+.reset-button-plain-text {
+  text-align: right;
+  padding: 0.4em 0.4em 0 0.2em;
+}
+
+.reset-button-plain-text button {
+  border: 0;
+  color: #00f;
+  right: 0;
+  padding: 0;
+}

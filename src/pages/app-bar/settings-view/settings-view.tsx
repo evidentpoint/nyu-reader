@@ -6,6 +6,7 @@ import '../../common.css';
 import './settings-view.css';
 import { SettingsViewStyleTab } from './settings-view-style-tab';
 import { SettingsViewLayoutTab } from './settings-view-layout-tab';
+import { SettingsViewKeyboardShortcutsTab } from './settings-view-keyboard-shortcuts-tab';
 
 type State = {
   fontSize: number;
@@ -14,6 +15,7 @@ type State = {
   pageWidth: number;
   displayFormat: string;
   scrollMode: string;
+  nameToKeyMap: {};
 };
 
 export interface IKeyBinding {
@@ -23,6 +25,8 @@ export interface IKeyBinding {
 }
 
 export class SettingsView extends React.Component<{}, {}> {
+  private defaultKeyBindings: IKeyBinding[];
+
   public readonly state: State = {
     fontSize: 1,
     fontFace: 'inherit',
@@ -30,10 +34,13 @@ export class SettingsView extends React.Component<{}, {}> {
     pageWidth: 550,
     displayFormat: 'auto',
     scrollMode: 'document',
+    nameToKeyMap: this.createNameToKeyMap(this.createDefaultKeyBindings()),
   };
 
   constructor(props: {}) {
     super(props);
+
+    this.defaultKeyBindings = this.createDefaultKeyBindings();
 
     this.setFontSize = this.setFontSize.bind(this);
     this.setFontFace = this.setFontFace.bind(this);
@@ -41,6 +48,8 @@ export class SettingsView extends React.Component<{}, {}> {
     this.setPageWidth = this.setPageWidth.bind(this);
     this.setDisplayFormat = this.setDisplayFormat.bind(this);
     this.setScrollMode = this.setScrollMode.bind(this);
+    this.resetNameToKeyMap = this.resetNameToKeyMap.bind(this);
+    this.setKeyBinding = this.setKeyBinding.bind(this);
   }
 
   public render(): ReactNode {
@@ -51,6 +60,7 @@ export class SettingsView extends React.Component<{}, {}> {
         <TabList>
           <Tab>Style</Tab>
           <Tab>Layout</Tab>
+          <Tab>Keyboard shortcuts</Tab>
         </TabList>
 
         <TabPanel>
@@ -71,6 +81,14 @@ export class SettingsView extends React.Component<{}, {}> {
             onPageWidthChange= {this.setPageWidth}
             onDisplayFormatChange= {this.setDisplayFormat}
             onScrollModeChange= {this.setScrollMode}
+          />
+        </TabPanel>
+        <TabPanel>
+          <SettingsViewKeyboardShortcutsTab
+            nameToKeyMap= {this.state.nameToKeyMap}
+            defaultKeyBindings= {this.defaultKeyBindings}
+            onResetAllKeyBindings= {this.resetNameToKeyMap}
+            onSetKeyBinding= {this.setKeyBinding}
           />
         </TabPanel>
       </Tabs>
@@ -103,5 +121,60 @@ export class SettingsView extends React.Component<{}, {}> {
 
   private setScrollMode(mode: string): void {
     this.setState({scrollMode: mode});
+  }
+
+  private resetNameToKeyMap(): void {
+    const nameToKeyMap = this.createNameToKeyMap();
+
+    this.setState({nameToKeyMap});
+  }
+
+  private setKeyBinding(name: string, keyValue: string): void {
+    this.setState((prevState: State) => {
+      const nameToKeyMap = prevState.nameToKeyMap;
+      nameToKeyMap[name] = keyValue;
+
+      return prevState;
+    });
+  }
+
+  private createNameToKeyMap(defaultBinding?: IKeyBinding[]): {} {
+    const defaultKeyBinding = defaultBinding || this.defaultKeyBindings;
+    const nameToKeyMap = {};
+    for (const keyBinding of defaultKeyBinding) {
+      nameToKeyMap[keyBinding.name] = keyBinding.keyValue;
+    }
+
+    return nameToKeyMap;
+  }
+
+  private createDefaultKeyBindings(): IKeyBinding[] {
+    return [
+      {
+        label: 'Settings',
+        name: 'ShowSettingsModal',
+        keyValue: 'o',
+      },
+      {
+        label: 'Settings - Save changes',
+        name: 'SettingsModalSave',
+        keyValue: 's',
+      },
+      {
+        label: 'Settings - Close',
+        name: 'SettingsModalClose',
+        keyValue: 'c',
+      },
+      {
+        label: 'Previous Page',
+        name: 'PagePrevious',
+        keyValue: 'left',
+      },
+      {
+        label: 'Next Page',
+        name: 'PageNext',
+        keyValue: 'right',
+      },
+    ];
   }
 }
