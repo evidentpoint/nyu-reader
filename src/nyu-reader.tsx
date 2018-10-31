@@ -69,32 +69,29 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
 
   public render(): ReactNode {
     const appContainerStyle: CSSProperties = {
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'grid',
+      gridTemplateRows: 'max-content 1fr max-content',
+      gridTemplateColumns: 'max-content 1fr max-content',
+      gridTemplateAreas: `'AppBar AppBar AppBar'
+                          'PrevNavBar BookContent NextNavBar'
+                          'Footer Footer Footer'`,
       width: '100%',
       height: '100%',
       overflow: 'hidden',
     };
 
-    const containerStyle: CSSProperties = {
-      flex: 'auto',
-      display: 'flex',
-      flexDirection: 'row',
-      width: '100%',
-    };
-
     return (
       <ReadingStateContext.Provider value={this.state.readingState}>
         <div style={ appContainerStyle }>
-          <AppBar title={ this.state.bookTitle }/>
-          <div style={ containerStyle }>
-            <NavButton isBackButton={ true } width={ 30 }/>
-            <ReadiumView ref={r => this.readiumView = r}
-              enableScroll={ this.state.scrollEnabled } viewAsVertical={ this.state.viewAsVertical }
-              onRenditionCreated={ this.renditionUpdated }/>
-            <NavButton isBackButton={ false } width={ 30 }/>
-          </div>
-          <BookFooter content={ this.state.currReadingLocation }></BookFooter>
+          <AppBar title={ this.state.bookTitle } style={ {gridArea: 'AppBar'} }/>
+          <NavButton isBackButton={ true } style={ {width: 30, gridArea: 'PrevNavBar'} }/>
+          <ReadiumView ref={r => this.readiumView = r}
+            enableScroll={ this.state.scrollEnabled } viewAsVertical={ this.state.viewAsVertical }
+            onRenditionCreated={ this.renditionUpdated }
+            style={ {gridArea: 'BookContent'} }/>
+          <NavButton isBackButton={ false } style={ {width: 30, gridArea: 'NextNavBar'} }/>
+          <BookFooter content={ this.state.currReadingLocation }
+                      style={ {height: 20, gridArea: 'Footer'} }></BookFooter>
       </div>
       </ReadingStateContext.Provider>
     );

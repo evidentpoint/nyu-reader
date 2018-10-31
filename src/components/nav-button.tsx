@@ -1,10 +1,10 @@
-import React, { ReactNode } from 'react';
+import React, { CSSProperties, ReactNode } from 'react';
 
 import { ReadingStateContext, IReadingActions } from '../reading-state-ctx';
 
 export interface INavButtonProps {
+  style?: CSSProperties;
   isBackButton: boolean;
-  width: number;
 }
 
 export class NavButton extends React.Component<INavButtonProps, {}> {
@@ -19,7 +19,7 @@ export class NavButton extends React.Component<INavButtonProps, {}> {
     return (
       <ReadingStateContext.Consumer>
         { ({actions}) => (
-          <button style={ {width: this.props.width} } onClick={ () => {
+          <button style={ this.props.style } onClick={ () => {
             this.handleClick(actions);
           } }>
             {buttonText}

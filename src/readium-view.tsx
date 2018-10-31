@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { CSSProperties, ReactNode } from 'react';
 
 import {
   IFrameLoader,
@@ -12,6 +12,7 @@ import {
 import { ViewportResizer } from './viewport-resizer';
 
 export interface IReadiumViewProps {
+  style?: CSSProperties;
   enableScroll: boolean;
   viewAsVertical: boolean;
   onRenditionCreated(rendCtx: RenditionContext): void;
@@ -37,7 +38,7 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
 
   public render(): ReactNode {
     return (
-      <div style={ {flex: '1'} }
+      <div style={ this.props.style }
         ref={ this.updateRoot }></div>
     );
   }
@@ -80,7 +81,7 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
     rend.setPageLayout({
       spreadMode: SpreadMode.FitViewportDoubleSpread,
       pageWidth: 0,
-      pageHeight: this.viewportHeight,
+      pageHeight: 0,
     });
 
     rend.render();

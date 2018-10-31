@@ -1,6 +1,7 @@
 import React, { CSSProperties, ReactNode } from 'react';
 
 export interface IAppBarProps {
+  style?: CSSProperties;
   title: string;
 }
 
@@ -10,13 +11,16 @@ export class AppBar extends React.Component<IAppBarProps, {}> {
   }
 
   public render(): ReactNode {
-    // tslint:disable-next-line:no-object-literal-type-assertion
-    const containerStyle = {
+    const containerStyle: CSSProperties = {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
       width: '100%',
-    } as CSSProperties;
+    };
+
+    if (this.props.style) {
+      Object.assign(containerStyle, this.props.style);
+    }
 
     return (
       <div style={ containerStyle }>
