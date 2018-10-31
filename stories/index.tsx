@@ -9,10 +9,10 @@ import { NavButton } from '../src/components/nav-button';
 
 storiesOf('NavButton', module)
   .add('Back', () => (
-    <NavButton isBackButton={ true } width={ 20 }></NavButton>
+    <NavButton isBackButton={ true } style={ {width: 20} }></NavButton>
   ))
   .add('Forward', () => (
-    <NavButton isBackButton={ false } width = { 20 }></NavButton>
+    <NavButton isBackButton={ false } style={ {width: 20} }></NavButton>
   ));
 
 storiesOf('AppBar', module)
