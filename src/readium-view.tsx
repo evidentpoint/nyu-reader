@@ -9,6 +9,8 @@ import {
   SpreadMode,
 } from '@evidentpoint/r2-navigator-web';
 
+import { ViewportResizer } from './viewport-resizer';
+
 export interface IReadiumViewProps {
   enableScroll: boolean;
   viewAsVertical: boolean;
@@ -22,6 +24,8 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
   private rendContext? : RenditionContext;
 
   private publication?: Publication;
+
+  private resizer?: ViewportResizer;
 
   private viewportWidth: number = 0;
   private viewportHeight: number = 0;
@@ -49,6 +53,10 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
     this.viewportHeight = this.root.clientHeight;
   }
 
+  public componentWillUnmount(): void {
+    this.cleanupResizer();
+  }
+
   public openPublication(pub: Publication): void {
     if (!this.root) {
       return;
@@ -59,7 +67,6 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
     loader.setReadiumCssBasePath('/assets/readium-css');
 
     const cvf = new ContentViewFactory(loader);
-    // const cvf = new ContentViewFactory(this.publication);
     const rend = new Rendition(this.publication, this.root, cvf);
     rend.setViewAsVertical(this.props.viewAsVertical);
 
@@ -81,10 +88,19 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
 
     this.rendContext = new RenditionContext(rend, loader);
 
+    this.cleanupResizer();
+    this.resizer = new ViewportResizer(this.root, this.rendContext);
+
     this.props.onRenditionCreated(this.rendContext);
   }
 
   private updateRoot(root: HTMLElement | null): void {
     this.root = root;
+  }
+
+  private cleanupResizer(): void {
+    if (this.resizer) {
+      this.resizer.stopListenResize();
+    }
   }
 }

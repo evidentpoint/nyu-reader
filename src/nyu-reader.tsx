@@ -73,6 +73,7 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
       flexDirection: 'column',
       width: '100%',
       height: '100%',
+      overflow: 'hidden',
     };
 
     const containerStyle: CSSProperties = {
