@@ -127,7 +127,9 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
     this.viewportHeight = this.root.clientHeight;
 
     if (this.rendContext) {
-      this.rendContext.rendition.viewport.setViewportSize(this.viewportWidth, this.viewportHeight);
+      const viewportSize = this.props.viewAsVertical ? this.viewportHeight : this.viewportWidth;
+      const viewportSize2nd = this.props.viewAsVertical ? this.viewportWidth : this.viewportHeight;
+      this.rendContext.rendition.viewport.setViewportSize(viewportSize, viewportSize2nd);
       this.rendContext.rendition.refreshPageLayout();
     }
   }
