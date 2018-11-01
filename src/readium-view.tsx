@@ -21,6 +21,7 @@ export interface IReadiumViewProps {
 export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
 
   private root: HTMLElement | null = null;
+  private viewportRoot: HTMLElement | null = null;
 
   private rendContext? : RenditionContext;
 
@@ -34,24 +35,28 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
   constructor(props: IReadiumViewProps) {
     super(props);
     this.updateRoot = this.updateRoot.bind(this);
+    this.updateViewportRoot = this.updateViewportRoot.bind(this);
+    this.updateSize = this.updateSize.bind(this);
   }
 
   public render(): ReactNode {
+    const containerStyle: CSSProperties = {
+      position: 'relative'
+    }
+
+    Object.assign(containerStyle, this.props.style);
+
     return (
-      <div style={ this.props.style }
-        ref={ this.updateRoot }></div>
+      <div style={ containerStyle }
+        ref={ this.updateRoot }>
+        <div id='viewport' ref={ this.updateViewportRoot }
+             style={ {position: "absolute"} }/>
+      </div>
     );
   }
 
   public componentDidMount(): void {
-    if (!this.root) {
-      return;
-    }
-
-    const scrollerWidthAdj = this.props.enableScroll ? 15 : 0;
-
-    this.viewportWidth = this.root.clientWidth - scrollerWidthAdj;
-    this.viewportHeight = this.root.clientHeight;
+    this.updateSize();
   }
 
   public componentWillUnmount(): void {
@@ -59,7 +64,7 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
   }
 
   public openPublication(pub: Publication): void {
-    if (!this.root) {
+     if (!this.root || !this.viewportRoot) {
       return;
     }
     this.publication = pub;
@@ -68,7 +73,7 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
     loader.setReadiumCssBasePath('/assets/readium-css');
 
     const cvf = new ContentViewFactory(loader);
-    const rend = new Rendition(this.publication, this.root, cvf);
+    const rend = new Rendition(this.publication, this.viewportRoot, cvf);
     rend.setViewAsVertical(this.props.viewAsVertical);
 
     const viewportSize = this.props.viewAsVertical ? this.viewportHeight :
@@ -90,7 +95,7 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
     this.rendContext = new RenditionContext(rend, loader);
 
     this.cleanupResizer();
-    this.resizer = new ViewportResizer(this.root, this.rendContext);
+    this.resizer = new ViewportResizer(this.root, this.rendContext, this.updateSize);
 
     this.props.onRenditionCreated(this.rendContext);
   }
@@ -99,9 +104,31 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
     this.root = root;
   }
 
+  private updateViewportRoot(viewportRoot: HTMLElement | null): void {
+    this.viewportRoot = viewportRoot;
+  }
+
   private cleanupResizer(): void {
     if (this.resizer) {
       this.resizer.stopListenResize();
+    }
+  }
+
+  private updateSize(): void {
+    if (!this.root || !this.viewportRoot) {
+      return;
+    }
+
+    this.viewportRoot.style.width = `${this.root.clientWidth}px`;
+    this.viewportRoot.style.height = `${this.root.clientHeight}px`
+
+    const scrollerWidthAdj = this.props.enableScroll ? 15 : 0;
+    this.viewportWidth = this.root.clientWidth - scrollerWidthAdj;
+    this.viewportHeight = this.root.clientHeight;
+
+    if (this.rendContext) {
+      this.rendContext.rendition.viewport.setViewportSize(this.viewportWidth, this.viewportHeight);
+      this.rendContext.rendition.refreshPageLayout();
     }
   }
 }

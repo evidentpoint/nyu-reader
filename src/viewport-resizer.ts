@@ -3,17 +3,21 @@ import {
   Location,
 } from '@evidentpoint/r2-navigator-web';
 
+type OnSizeUpdateCallback = () => void;
+
 export class ViewportResizer {
   private viewRoot: HTMLElement;
   private rendCtx: RenditionContext;
+  private updateCallback: OnSizeUpdateCallback;
 
   private resizeListener: EventCallback;
 
   private location: Location | null | undefined;
 
-  public constructor(viewRoot: HTMLElement, rendCtx: RenditionContext) {
+  public constructor(viewRoot: HTMLElement, rendCtx: RenditionContext, updateCallback: OnSizeUpdateCallback) {
     this.viewRoot = viewRoot;
     this.rendCtx = rendCtx;
+    this.updateCallback = updateCallback;
 
     this.registerResizeHandler();
   }
@@ -41,19 +45,11 @@ export class ViewportResizer {
   }
 
   private async handleViewportResizeEnd(): Promise<void> {
-    this.resize();
+    this.updateCallback();
 
     if (this.location) {
       await this.rendCtx.rendition.viewport.renderAtLocation(this.location);
     }
-  }
-
-  private resize(): void {
-    const newWidth = this.viewRoot.clientWidth;
-    const newHeight = this.viewRoot.clientHeight;
-
-    this.rendCtx.rendition.viewport.setViewportSize(newWidth, newHeight);
-    this.rendCtx.rendition.refreshPageLayout();
   }
 }
 
