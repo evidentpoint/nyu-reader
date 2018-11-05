@@ -13,8 +13,13 @@ import { NavButton } from './components/nav-button';
 import { BookFooter } from './components/book-footer';
 import { ReadiumView } from './readium-view';
 
+export interface INYUReaderSetting {
+  continousScroll: boolean
+}
+
 export interface INYUReaderProps {
   publication?: Publication;
+  initSetting?: INYUReaderSetting;
 }
 
 export interface INYUReaderStates {
@@ -44,7 +49,12 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
       },
     };
 
-    this.state = { viewAsVertical: false, scrollEnabled: false,
+    let continousScroll = false;
+    if (this.props.initSetting) {
+      continousScroll = this.props.initSetting.continousScroll;
+    }
+
+    this.state = { viewAsVertical: continousScroll, scrollEnabled: continousScroll,
                    bookTitle: '', currReadingLocation: '',
                    readingState: initReadingState };
     this.renditionUpdated = this.renditionUpdated.bind(this);
