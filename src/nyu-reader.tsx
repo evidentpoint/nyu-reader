@@ -4,6 +4,7 @@ import {
   Navigator,
   Publication,
   RenditionContext,
+  SettingName,
 } from '@evidentpoint/r2-navigator-web';
 
 import { ReadingStateContext, IReadingState } from './reading-state-ctx';
@@ -37,11 +38,23 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
   constructor(props: INYUReaderProps) {
     super(props);
 
+    const initReaderSettingsState = {
+      fontSize: 100,
+      readingMode: '',
+      columnGap: 20,
+      spreadMode: 'double',
+    };
+
     const initReadingState = {
       actions: {
         nextScreen: this.nextScreen.bind(this),
         prevScreen: this.prevScreen.bind(this),
+        setFontSize: this.setFontSize.bind(this),
+        setReadingMode: this.setReadingMode.bind(this),
+        setColumnGap: this.setColumnGap.bind(this),
+        setSpreadMode: this.setSpreadMode.bind(this),
       },
+      data: initReaderSettingsState,
     };
 
     this.state = { viewAsVertical: false, scrollEnabled: false,
@@ -140,4 +153,87 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
     this.setState({ currReadingLocation: locContent });
   }
 
+  private setFontSize(fontSize: number): void {
+    if (!this.rendCtx) {
+      return;
+    }
+
+    const fontSettings = [
+      {
+        name: SettingName.FontSize,
+        value: fontSize,
+      },
+    ];
+
+    this.setState(state => {
+      state.readingState.data.fontSize = fontSize;
+
+      return state;
+    });
+
+    this.rendCtx.rendition.updateViewSettings(fontSettings);
+  }
+
+  private setReadingMode(readingMode: string): void {
+    if (!this.rendCtx) {
+      return;
+    }
+
+    const settings = [
+      {
+        name: SettingName.ReadingMode,
+        value: readingMode,
+      },
+    ];
+
+    this.setState(state => {
+      state.readingState.data.readingMode = readingMode;
+
+      return state;
+    });
+
+    this.rendCtx.rendition.updateViewSettings(settings);
+  }
+
+  private setColumnGap(columnGap: number): void {
+    if (!this.rendCtx) {
+      return;
+    }
+
+    const settings = [
+      {
+        name: SettingName.ColumnGap,
+        value: columnGap,
+      },
+    ];
+
+    this.setState(state => {
+      state.readingState.data.columnGap = columnGap;
+
+      return state;
+    });
+
+    this.rendCtx.rendition.updateViewSettings(settings);
+  }
+
+  private setSpreadMode(spreadMode: string): void {
+    if (!this.rendCtx) {
+      return;
+    }
+
+    const settings = [
+      {
+        name: SettingName.SpreadMode,
+        value: spreadMode,
+      },
+    ];
+
+    this.setState(state => {
+      state.readingState.data.spreadMode = spreadMode;
+
+      return state;
+    });
+
+    this.rendCtx.rendition.updateViewSettings(settings);
+  }
 }

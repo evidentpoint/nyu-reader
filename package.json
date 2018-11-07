@@ -14,11 +14,13 @@
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "dependencies": {
+    "@evidentpoint/r2-navigator-web": "^0.0.3",
+    "@types/react-modal": "^3.2.1",
     "es6-shim": "^0.35.3",
     "promise-polyfill": "^8.0.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "@evidentpoint/r2-navigator-web": "^0.0.3",
+    "react-modal": "^3.6.1",
     "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {

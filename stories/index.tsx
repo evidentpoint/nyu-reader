@@ -16,6 +16,6 @@ storiesOf('NavButton', module)
   ));
 
 storiesOf('AppBar', module)
-  .add('Back', () => (
+  .add('Default', () => (
   <AppBar title={ 'Book Title' }></AppBar>
   ));
