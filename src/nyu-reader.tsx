@@ -63,7 +63,7 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
   public async openPublication(webpubUrl: string): Promise<void> {
     this.publication = await Publication.fromURL(webpubUrl);
 
-    const bookTitle = this.publication.Metadata.Title as string;
+    const bookTitle = this.publication.metadata.title as string;
     this.setState({ bookTitle });
 
     if (this.readiumView) {
