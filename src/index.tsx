@@ -5,9 +5,10 @@ import { NYUReader } from './nyu-reader';
 
 let reader: NYUReader | null;
 ReactDOM.render(
-  <NYUReader ref={r => reader = r} initSetting={{continousScroll: true}}/>,
+  <NYUReader ref={r => reader = r} initSetting={{ continousScroll: false }}/>,
   document.getElementById('reader'), async () => {
     if (reader) {
-      await reader.openPublication(`${location.origin}/assets/publications/metamorphosis/`);
+      // tslint:disable-next-line:max-line-length
+      await reader.openPublication(`${location.origin}/assets/publications/metamorphosis/manifest.json`);
     }
   });
