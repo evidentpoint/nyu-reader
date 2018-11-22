@@ -71,7 +71,7 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
     }
 
     if (this.rendCtx) {
-      await this.rendCtx.rendition.viewport.renderAtOffset(0);
+      await this.rendCtx.navigator.gotoBegin();
     }
 
     this.updateCurrentReadingLocaion();

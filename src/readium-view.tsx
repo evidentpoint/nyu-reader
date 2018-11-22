@@ -7,6 +7,7 @@ import {
   Rendition,
   RenditionContext,
   SpreadMode,
+  ScrollMode,
 } from '@evidentpoint/r2-navigator-web';
 
 import { ViewportResizer } from './viewport-resizer';
@@ -90,7 +91,7 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
     });
 
     rend.render();
-    rend.viewport.enableScroll(this.props.enableScroll);
+    rend.viewport.setScrollMode(this.props.enableScroll ? ScrollMode.Publication : ScrollMode.None);
 
     this.rendContext = new RenditionContext(rend, loader);
 
