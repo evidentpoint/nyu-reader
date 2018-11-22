@@ -41,16 +41,16 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
 
   public render(): ReactNode {
     const containerStyle: CSSProperties = {
-      position: 'relative'
-    }
+      position: 'relative',
+    };
 
     Object.assign(containerStyle, this.props.style);
 
     return (
       <div style={ containerStyle }
         ref={ this.updateRoot }>
-        <div id='viewport' ref={ this.updateViewportRoot }
-             style={ {position: "absolute"} }/>
+        <div id="viewport" ref={ this.updateViewportRoot }
+             style={{ position: 'absolute' }}/>
       </div>
     );
   }
@@ -64,7 +64,7 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
   }
 
   public openPublication(pub: Publication): void {
-     if (!this.root || !this.viewportRoot) {
+    if (!this.root || !this.viewportRoot) {
       return;
     }
     this.publication = pub;
@@ -120,7 +120,7 @@ export class ReadiumView extends React.Component<IReadiumViewProps, {}> {
     }
 
     this.viewportRoot.style.width = `${this.root.clientWidth}px`;
-    this.viewportRoot.style.height = `${this.root.clientHeight}px`
+    this.viewportRoot.style.height = `${this.root.clientHeight}px`;
 
     const scrollerWidthAdj = this.props.enableScroll ? 15 : 0;
     this.viewportWidth = this.root.clientWidth - scrollerWidthAdj;

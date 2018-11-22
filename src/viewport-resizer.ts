@@ -14,7 +14,8 @@ export class ViewportResizer {
 
   private location: Location | null | undefined;
 
-  public constructor(viewRoot: HTMLElement, rendCtx: RenditionContext, updateCallback: OnSizeUpdateCallback) {
+  public constructor(viewRoot: HTMLElement, rendCtx: RenditionContext,
+                     updateCallback: OnSizeUpdateCallback) {
     this.viewRoot = viewRoot;
     this.rendCtx = rendCtx;
     this.updateCallback = updateCallback;
@@ -66,26 +67,26 @@ function extendedThrottle(startCb: EventCallback, tickCb: EventCallback, endCb: 
   let deferTimer: number | undefined;
 
   return function (event: UIEvent): void {
-      const ctx = context;
-      const now = (Date.now && Date.now()) || new Date().getTime();
+    const ctx = context;
+    const now = (Date.now && Date.now()) || new Date().getTime();
 
-      if (!(last && now < last + aDelay)) {
-          last = now;
-          if (first) {
-              startCb.apply(ctx, event);
-              first = false;
-          } else {
-              tickCb.apply(ctx, event);
-          }
+    if (!(last && now < last + aDelay)) {
+      last = now;
+      if (first) {
+        startCb.apply(ctx, event);
+        first = false;
+      } else {
+        tickCb.apply(ctx, event);
       }
+    }
 
-      clearTimeout(deferTimer);
-      deferTimer = window.setTimeout(
-        () => {
-          last = now;
-          first = true;
-          endCb.apply(ctx, event);
-        },
-        aWaitThreshold);
+    clearTimeout(deferTimer);
+    deferTimer = window.setTimeout(
+      () => {
+        last = now;
+        first = true;
+        endCb.apply(ctx, event);
+      },
+      aWaitThreshold);
   };
 }

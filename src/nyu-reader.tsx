@@ -14,7 +14,7 @@ import { BookFooter } from './components/book-footer';
 import { ReadiumView } from './readium-view';
 
 export interface INYUReaderSetting {
-  continousScroll: boolean
+  continousScroll: boolean;
 }
 
 export interface INYUReaderProps {
@@ -55,8 +55,8 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
     }
 
     this.state = { viewAsVertical: continousScroll, scrollEnabled: continousScroll,
-                   bookTitle: '', currReadingLocation: '',
-                   readingState: initReadingState };
+      bookTitle: '', currReadingLocation: '',
+      readingState: initReadingState };
     this.renditionUpdated = this.renditionUpdated.bind(this);
   }
 
@@ -93,15 +93,15 @@ export class NYUReader extends React.Component<INYUReaderProps, INYUReaderStates
     return (
       <ReadingStateContext.Provider value={this.state.readingState}>
         <div style={ appContainerStyle }>
-          <AppBar title={ this.state.bookTitle } style={ {gridArea: 'AppBar'} }/>
-          <NavButton isBackButton={ true } style={ {width: 30, gridArea: 'PrevNavBar'} }/>
+          <AppBar title={ this.state.bookTitle } style={{ gridArea: 'AppBar' }}/>
+          <NavButton isBackButton={ true } style={{ width: 30, gridArea: 'PrevNavBar' }}/>
           <ReadiumView ref={r => this.readiumView = r}
             enableScroll={ this.state.scrollEnabled } viewAsVertical={ this.state.viewAsVertical }
             onRenditionCreated={ this.renditionUpdated }
-            style={ {gridArea: 'BookContent'} }/>
-          <NavButton isBackButton={ false } style={ {width: 30, gridArea: 'NextNavBar'} }/>
+            style={{ gridArea: 'BookContent' }}/>
+          <NavButton isBackButton={ false } style={{ width: 30, gridArea: 'NextNavBar' }}/>
           <BookFooter content={ this.state.currReadingLocation }
-                      style={ {height: 20, gridArea: 'Footer'} }></BookFooter>
+                      style={{ height: 20, gridArea: 'Footer' }}></BookFooter>
       </div>
       </ReadingStateContext.Provider>
     );
